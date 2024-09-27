@@ -2,36 +2,45 @@ import React, { useRef, useState } from "react";
 import Header from "./Header";
 import BackgroundImage from "../assets/images/Background.jpg";
 import { checkValidData } from "../utils/validate";
-import { signIn } from "../redux/slices/authService";
 import { loginUser } from "../redux/slices/userSlice";
 import { useDispatch } from "react-redux";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { AppDispatch } from "../redux/store"; // Import AppDispatch
 
 const SignIn: React.FC = () => {
   const email = useRef<HTMLInputElement>(null);
   const password = useRef<HTMLInputElement>(null);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
-  const dispatch = useDispatch();
+  const dispatch: AppDispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
 
-  const handleButtonClick = async () => {
+  const handleButtonClick = async (e: React.FormEvent) => {
+    e.preventDefault();
     const message = checkValidData(
       email.current?.value,
       password.current?.value
     );
     setErrorMessage(message);
+
     if (!message) {
-      try {
-        const response = await signIn(
-          email.current?.value || "",
-          password.current?.value || ""
-        );
-        dispatch(
-          loginUser({ user: response.data.user, token: response.data.token })
-        );
-        navigate("/dashboard");
-      } catch (error) {
-        setErrorMessage("Invalid credentials");
+      const emailValue = email.current?.value;
+      const passwordValue = password.current?.value;
+
+      if (emailValue && passwordValue) {
+        try {
+          const res = await dispatch(
+            loginUser({
+              email: emailValue,
+              password: passwordValue,
+            })
+          ).unwrap(); // unwrap to get the resolved value
+          console.log(res); // Handle successful login response here
+          navigate("/dashboard");
+        } catch (error) {
+          setErrorMessage((error as any)?.error || "Login failed"); // Handle the error message
+        }
+      } else {
+        setErrorMessage("Email and password are required.");
       }
     }
   };
@@ -47,10 +56,7 @@ const SignIn: React.FC = () => {
       <div className="flex justify-center items-center h-full relative z-10">
         <form
           className="p-8 bg-black bg-opacity-75 w-full max-w-md rounded-lg shadow-lg text-white"
-          onSubmit={(e) => {
-            e.preventDefault();
-            handleButtonClick();
-          }}
+          onSubmit={handleButtonClick}
         >
           <h1 className="w-full m-2 font-bold text-2xl">Sign In</h1>
           <input
@@ -67,14 +73,17 @@ const SignIn: React.FC = () => {
           />
           <p className="text-red-600 font-bold text-lg py-2">{errorMessage}</p>
           <button
-            type="button" // Prevents default form submission
+            type="button"
             className="w-full p-3 m-2 bg-fuchsia-500 text-white rounded hover:bg-fuchsia-600"
             onClick={handleButtonClick}
           >
             Sign In
           </button>
           <p className="w-full p-3 m-2 py-4">
-            New To Secure User Dashboard? Sign Up Now
+            New To Secure User Dashboard?{" "}
+            <Link className="font-bold text-fuchsia-500" to={"/signup"}>
+              Sign Up Now
+            </Link>
           </p>
         </form>
       </div>

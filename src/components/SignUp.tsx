@@ -3,7 +3,7 @@ import { useDispatch } from "react-redux";
 import { registerUser } from "../redux/slices/userSlice";
 import BackgroundImage from "../assets/images/Background.jpg";
 import { checkValidSignUpData } from "../utils/validate";
-import { AppDispatch } from "../redux/store"; // Ensure you have this import
+import { AppDispatch } from "../redux/store"; 
 import { Link } from "react-router-dom";
 
 const SignUp: React.FC = () => {
@@ -11,10 +11,10 @@ const SignUp: React.FC = () => {
   const email = useRef<HTMLInputElement>(null);
   const password = useRef<HTMLInputElement>(null);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
-  const dispatch = useDispatch<AppDispatch>(); // Type dispatch with AppDispatch
+  const dispatch = useDispatch<AppDispatch>(); 
 
   const handleButtonClick = async (e: React.FormEvent) => {
-    e.preventDefault(); // Prevent form default behavior
+    e.preventDefault(); 
     const message = checkValidSignUpData(
       username.current?.value,
       email.current?.value,
@@ -29,8 +29,8 @@ const SignUp: React.FC = () => {
             email: email.current?.value || "",
             password: password.current?.value || "",
           })
-        ).unwrap(); // unwrap will help to get the resolved value or throw an error
-        console.log(res); // Handle successful registration response here
+        ).unwrap(); 
+        console.log(res); 
       } catch (error: any) {
         setErrorMessage(error.error || "Registration failed"); // Handle the error message
       }

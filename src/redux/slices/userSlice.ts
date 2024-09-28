@@ -3,7 +3,7 @@ import { signIn, signUp, fetchUsers } from "./authService";
 
 // Define user and token types (adjust based on your actual data models)
 interface User {
-  id: number; 
+  id: number;
   email: string;
   first_name: string;
   last_name: string;
@@ -15,7 +15,7 @@ interface LoginSuccessResponse {
 }
 
 interface RegisterSuccessResponse {
-  id: string; 
+  id: string;
   token: string;
 }
 
@@ -105,7 +105,14 @@ export const getUsers = createAsyncThunk<
 export const userSlice = createSlice({
   name: "user",
   initialState,
-  reducers: {},
+  reducers: {
+    signOut: (state) => {
+      state.user = null;
+      state.token = null;
+      state.isError = false;
+      state.message = "Signed out successfully";
+    },
+  },
   extraReducers: (builder) => {
     builder
       .addCase(loginUser.pending, (state) => {
@@ -165,4 +172,5 @@ export const userSlice = createSlice({
   },
 });
 
+export const { signOut } = userSlice.actions;
 export default userSlice.reducer;

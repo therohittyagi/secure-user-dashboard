@@ -13,18 +13,17 @@ const Dashboard: React.FC = () => {
   const [users, setUsers] = useState<any[]>([]);
 
   useEffect(() => {
+    const fetchUsers = async () => {
+      try {
+        const res = await dispatch(getUsers()).unwrap();
+        setUsers(res.data);
+        navigate("/dashboard");
+      } catch (error) {
+        console.log((error as any)?.error || "Fetching users failed");
+      }
+    };
     fetchUsers();
-  }, []);
-
-  const fetchUsers = async () => {
-    try {
-      const res = await dispatch(getUsers()).unwrap();
-      setUsers(res.data);
-      navigate("/dashboard");
-    } catch (error) {
-      console.log((error as any)?.error || "Fetching users failed");
-    }
-  };
+  }, [dispatch, navigate]);
 
   return (
     <div className="absolute h-screen w-screen">
@@ -34,7 +33,9 @@ const Dashboard: React.FC = () => {
         alt="Background"
       />
       <div className="flex flex-col justify-center items-center h-full relative z-10 p-4">
-        <h1 className="text-2xl font-bold md:text-3xl text-white mb-4">User Dashboard</h1>
+        <h1 className="text-2xl font-bold md:text-3xl text-white mb-4">
+          User Dashboard
+        </h1>
 
         {/* Display user data in a scrollable container for small screens */}
         {users.length > 0 ? (

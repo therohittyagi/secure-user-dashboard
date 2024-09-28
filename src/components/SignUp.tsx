@@ -1,7 +1,6 @@
 import React, { useRef, useState } from "react";
 import { useDispatch } from "react-redux";
 import { registerUser } from "../redux/slices/userSlice";
-import Header from "./Header";
 import BackgroundImage from "../assets/images/Background.jpg";
 import { checkValidSignUpData } from "../utils/validate";
 import { AppDispatch } from "../redux/store"; // Ensure you have this import
@@ -40,7 +39,6 @@ const SignUp: React.FC = () => {
 
   return (
     <div className="relative h-screen w-screen">
-      <Header />
       <img
         className="absolute h-full w-full object-cover z-0"
         src={BackgroundImage}

@@ -1,5 +1,5 @@
 import React, { useRef, useState } from "react";
-import Header from "./Header";
+
 import BackgroundImage from "../assets/images/Background.jpg";
 import { checkValidData } from "../utils/validate";
 import { loginUser } from "../redux/slices/userSlice";
@@ -47,7 +47,6 @@ const SignIn: React.FC = () => {
 
   return (
     <div className="relative h-screen w-screen">
-      <Header />
       <img
         className="absolute h-full w-full object-cover z-0"
         src={BackgroundImage}
